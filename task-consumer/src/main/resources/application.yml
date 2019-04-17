@@ -1,0 +1,52 @@
+server:
+  port: 9002
+
+spring:
+  application:
+    name: task-consumer
+  kafka:
+    consumer:
+      properties:
+        spring.json.trusted.packages: "*"
+
+# configure Kafka binder
+spring.cloud.stream.kafka.binder:
+  brokers: ${kafka.brokers}
+  auto-create-topics: false # disable topic creation by Spring Cloud Stream
+  configuration:
+    group.id: task-consumer
+    value.serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    value.deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+spring.cloud.stream.bindings:
+  notifications:
+    destination: notifications
+    producer:
+      useNativeEncoding: true
+      headerMode: headers
+  tasks:
+    destination: tasks
+    consumer:
+      useNativeDecoding: true
+      headerMode: headers
+
+# configure topic provisioning
+kafka.provision:
+  brokers: ${kafka.brokers}
+  topics:
+    - name: ${tasks.topic}
+      numPartitions: ${tasks.topic.partitions}
+      replicationFactor: ${tasks.topic.replication.factor}
+      configs:
+        cleanup.policy: ${tasks.topic.cleanup.policy}
+        retention.ms: ${tasks.topic.retention.ms}
+    - name: ${notifications.topic}
+      numPartitions: ${notifications.topic.partitions}
+      replicationFactor: ${notifications.topic.replication.factor}
+      configs:
+        cleanup.policy: ${notifications.topic.cleanup.policy}
+        retention.ms: ${notifications.topic.retention.ms}
+
+logging:
+  level:
+    org.apache.kafka.clients.producer: WARN

@@ -1,0 +1,81 @@
+version: '3'
+
+services:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+    networks:
+      - demo
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      # KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      # KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+    networks:
+      - demo
+
+  taks_producer:
+    build: ./task-producer/
+    container_name: task_producer
+    ports:
+      - "9001:9001"
+    depends_on:
+      - kafka
+    environment:
+      - KAFKA_BROKERS=${KAFKA_BROKERS}
+      - TASKS_TOPIC=${TASKS_TOPIC}
+      - TASKS_TOPIC_PARTITIONS=${TASKS_TOPIC_PARTITIONS}
+      - TASKS_TOPIC_REPLICATION_FACTOR=${TASKS_TOPIC_REPLICATION_FACTOR}
+      - TASKS_TOPIC_CLEANUP_POLICY=${TASKS_TOPIC_CLEANUP_POLICY}
+      - TASKS_TOPIC_RETENTION_MS=${TASKS_TOPIC_RETENTION_MS}
+      - NOTIFICATIONS_TOPIC=${NOTIFICATIONS_TOPIC}
+      - NOTIFICATIONS_TOPIC_PARTITIONS=${NOTIFICATIONS_TOPIC_PARTITIONS}
+      - NOTIFICATIONS_TOPIC_REPLICATION_FACTOR=${NOTIFICATIONS_TOPIC_REPLICATION_FACTOR}
+      - NOTIFICATIONS_TOPIC_CLEANUP_POLICY=${NOTIFICATIONS_TOPIC_CLEANUP_POLICY}
+      - NOTIFICATIONS_TOPIC_RETENTION_MS=${NOTIFICATIONS_TOPIC_RETENTION_MS}
+    networks:
+      - demo
+
+  task_consumer:
+    build: ./task-consumer/
+    container_name: task_consumer
+    ports:
+      - "9002:9002"
+    depends_on:
+      - kafka
+    environment:
+      - KAFKA_BROKERS=${KAFKA_BROKERS}
+      - TASKS_TOPIC=${TASKS_TOPIC}
+      - TASKS_TOPIC_PARTITIONS=${TASKS_TOPIC_PARTITIONS}
+      - TASKS_TOPIC_REPLICATION_FACTOR=${TASKS_TOPIC_REPLICATION_FACTOR}
+      - TASKS_TOPIC_CLEANUP_POLICY=${TASKS_TOPIC_CLEANUP_POLICY}
+      - TASKS_TOPIC_RETENTION_MS=${TASKS_TOPIC_RETENTION_MS}
+      - NOTIFICATIONS_TOPIC=${NOTIFICATIONS_TOPIC}
+      - NOTIFICATIONS_TOPIC_PARTITIONS=${NOTIFICATIONS_TOPIC_PARTITIONS}
+      - NOTIFICATIONS_TOPIC_REPLICATION_FACTOR=${NOTIFICATIONS_TOPIC_REPLICATION_FACTOR}
+      - NOTIFICATIONS_TOPIC_CLEANUP_POLICY=${NOTIFICATIONS_TOPIC_CLEANUP_POLICY}
+      - NOTIFICATIONS_TOPIC_RETENTION_MS=${NOTIFICATIONS_TOPIC_RETENTION_MS}
+    networks:
+      - demo
+
+networks:
+  demo:
+    driver: bridge
