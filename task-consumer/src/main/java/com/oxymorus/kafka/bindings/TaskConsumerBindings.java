@@ -8,11 +8,11 @@ public interface TaskConsumerBindings {
 
     String TASKS_CHANNEL = "tasks";
 
-    String NOTIFICATIONS_CHANNEL = "notifications";
+    String RESULTS_CHANNEL = "results";
 
     @Input(TASKS_CHANNEL)
     MessageChannel tasks();
 
-    @Output(NOTIFICATIONS_CHANNEL)
-    MessageChannel notifications();
+    @Output(RESULTS_CHANNEL)
+    MessageChannel results();
 }

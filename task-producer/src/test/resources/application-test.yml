@@ -1,0 +1,2 @@
+kafka.provision.enabled: false
+task.producer.scheduling.enabled: false

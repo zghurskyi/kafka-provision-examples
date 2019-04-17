@@ -8,11 +8,11 @@ public interface TaskProducerBindings {
 
     String TASKS_CHANNEL = "tasks";
 
-    String NOTIFICATIONS_CHANNEL = "notifications";
+    String RESULTS_CHANNEL = "results";
 
     @Output(TASKS_CHANNEL)
     MessageChannel tasks();
 
-    @Input(NOTIFICATIONS_CHANNEL)
-    MessageChannel notifications();
+    @Input(RESULTS_CHANNEL)
+    MessageChannel results();
 }

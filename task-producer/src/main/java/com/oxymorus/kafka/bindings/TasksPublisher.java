@@ -1,7 +1,7 @@
 package com.oxymorus.kafka.bindings;
 
-import com.oxymorus.kafka.bindings.message.TaskMessage;
 import com.oxymorus.kafka.domain.Task;
+import com.oxymorus.kafka.message.TaskMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.messaging.MessageChannel;

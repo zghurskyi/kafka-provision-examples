@@ -22,8 +22,8 @@ spring.cloud.stream.kafka.binder:
     value.deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
 
 spring.cloud.stream.bindings:
-  notifications:
-    destination: notifications
+  results:
+    destination: results
     consumer:
       useNativeDecoding: true
       headerMode: headers
@@ -43,12 +43,12 @@ kafka.provision:
       configs:
         cleanup.policy: ${tasks.topic.cleanup.policy}
         retention.ms: ${tasks.topic.retention.ms}
-    - name: ${notifications.topic}
-      numPartitions: ${notifications.topic.partitions}
-      replicationFactor: ${notifications.topic.replication.factor}
+    - name: ${results.topic}
+      numPartitions: ${results.topic.partitions}
+      replicationFactor: ${results.topic.replication.factor}
       configs:
-        cleanup.policy: ${notifications.topic.cleanup.policy}
-        retention.ms: ${notifications.topic.retention.ms}
+        cleanup.policy: ${results.topic.cleanup.policy}
+        retention.ms: ${results.topic.retention.ms}
 
 logging:
   level:

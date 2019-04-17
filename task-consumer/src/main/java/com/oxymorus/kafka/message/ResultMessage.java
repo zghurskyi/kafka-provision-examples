@@ -1,4 +1,4 @@
-package com.oxymorus.kafka.bindings.message;
+package com.oxymorus.kafka.message;
 
 import com.oxymorus.kafka.domain.Action;
 import com.oxymorus.kafka.domain.Status;
@@ -11,7 +11,8 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @ToString
-public class NotificationMessage {
+@EqualsAndHashCode
+public class ResultMessage {
     @NotNull
     private Action action;
     @NotNull
